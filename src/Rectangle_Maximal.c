@@ -24,7 +24,7 @@ int main(int argc, char* argv[])
 	
 
     /* 2 - Lancement de l'algorithme demandé pour résoudre le problème */ 
-    int Surface_max;
+    int Surface_max = 0;
 
     switch (atoi(argv[2]))
     {

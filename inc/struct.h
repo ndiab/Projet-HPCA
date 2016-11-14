@@ -1,6 +1,8 @@
 #ifndef STRUCT_H
 #define STRUCT_H
 
+#define MIN(a,b) (((a)<(b))?(a):(b))
+#define MAX(a,b) (((a)>(b))?(a):(b))
 
 typedef struct _Context
 {
@@ -10,9 +12,6 @@ typedef struct _Context
 	unsigned int l;
 	unsigned int h;
 }Context;
-
-#define MIN(a,b) (((a)<(b))?(a):(b))
-#define MAX(a,b) (((a)>(b))?(a):(b))
 
 
 #endif /* struct.h */

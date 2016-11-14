@@ -49,7 +49,8 @@ int load_file(Context* cont)
 
 
 void dealloc(Context* cont){
-    for (int k=0; k<cont->nb_points; ++k)
+    int k;
+    for (k=0; k<cont->nb_points; ++k)
         free(cont->Points[k]);
     free(cont->Points);
     free(cont);
