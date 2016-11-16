@@ -1,7 +1,7 @@
 #include <algo1.h>
 
-int algo1(Context *cont)
-{
+int sequentiel1(Context *cont){
+
     int i,j, y_min, surface_max = 0;
     for (i=0;i<cont->nb_points-1;++i)
         for (j=i+1;j<cont->nb_points;++j)
@@ -19,5 +19,23 @@ int algo1(Context *cont)
            }
            surface_max = MAX(surface_max,y_min*(cont->Points[j][0] - cont->Points[i][0]));
         }
+
     return surface_max;
-}	
+
+}
+
+
+int algo1(Context *cont, int env)
+{  
+    int surface_max = 0;
+
+    switch (env){
+        case CPU:
+		surface_max = sequentiel1(cont);
+		break;
+        case GPU:
+		break;
+    }
+  
+    return surface_max;
+}

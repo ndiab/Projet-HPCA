@@ -14,7 +14,7 @@ int main(int argc, char* argv[])
 {
 
     /* 1 - Initialisation du contexte */  
-    Context *cont = malloc(sizeof(Context));
+    Context *cont = (Context*) malloc(sizeof(Context));
     cont->file_name = argv[1];
     
     if (load_file(cont)){
@@ -25,14 +25,15 @@ int main(int argc, char* argv[])
 
     /* 2 - Lancement de l'algorithme demandé pour résoudre le problème */ 
     int Surface_max = 0;
+    int env = atoi(argv[3]);
 
     switch (atoi(argv[2]))
     {
 	case 1 :
-	    Surface_max = algo1(cont);
+	    Surface_max = algo1(cont, env);
 	    break;
 	case 2 :
-	    Surface_max = algo2(cont);
+	    Surface_max = algo2(cont, env);
 	    break;
     }
 

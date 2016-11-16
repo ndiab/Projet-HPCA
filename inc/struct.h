@@ -4,6 +4,9 @@
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #define MAX(a,b) (((a)>(b))?(a):(b))
 
+#define CPU 0
+#define GPU 1
+
 typedef struct _Context
 {
 	char* file_name;
