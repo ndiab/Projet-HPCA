@@ -1,6 +1,6 @@
 #include <algo1.h>
 
-int sequentiel1(Context *cont){
+int cpu1(Context *cont){
 
     int i,j, y_min, surface_max = 0;
     for (i=0;i<cont->nb_points-1;++i)
@@ -25,15 +25,33 @@ int sequentiel1(Context *cont){
 }
 
 
+__host__ int gpu1(Context* cont){
+
+    int surface_max = 0;
+    //Context *cont; //device copy of cont
+    
+     
+    
+    return surface_max;
+
+}
+
+__global__ void kernel1(Context *cont){
+    int index = threadIdx.x + blockIdx.x * blockDim.x;
+    
+}
+
+
 int algo1(Context *cont, int env)
 {  
     int surface_max = 0;
 
     switch (env){
         case CPU:
-		surface_max = sequentiel1(cont);
+		surface_max = cpu1(cont);
 		break;
         case GPU:
+		surface_max = gpu1(cont);
 		break;
     }
   
