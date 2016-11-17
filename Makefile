@@ -20,6 +20,6 @@ obj/%.o : src/%.cu
 #	$(CXX) -c -o $@ $^ $(CPPFLAGS) 
 
 exec : 
-	./bin/run ex_N100_res6741 1 0
+	./bin/run ex_N100_res6741 1 1
 clean :
 	rm -f bin/* obj/*

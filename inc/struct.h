@@ -14,6 +14,7 @@ typedef struct _Context
 	unsigned int nb_points;
 	unsigned int l;
 	unsigned int h;
+        int surface_max;
 }Context;
 
 
