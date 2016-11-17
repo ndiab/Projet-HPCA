@@ -46,36 +46,34 @@ int load_file(Context* cont)
 	
 }
 
-__host__ Context* send_gpu(Context *cont){
+__host__ Context* send_gpu(Context *h_cont){
     /*
     Alloue la mémoire et copie les données du context CPU -> GPU.
     retourne le pointeur sur le contexte du device
     */
 
-    int k;
-    Context *cont_gpu; //device copy of cont
-    printf("test 3");
-    /* Memory device allocation */
-    cudaMalloc(&cont_gpu, sizeof(Context));
-    /* Memory allocation of Points tab */
-    cudaMalloc(cont_gpu->Points , cont->nb_points*sizeof(int *));
-    for (k=0; k< cont_gpu->nb_points; ++k)
-    {
-        cudaMalloc((void**) cont_gpu->Points[k], 2*sizeof(int));
+    Context *d_cont, *l_cont; //device copy of cont
+    l_cont = (Context*)malloc(sizeof(Context));
+    int **d_points, **l_points, k;
+    l_points = (int**)malloc(h_cont->nb_points*sizeof(int *));
+
+    for(k = 0; k < h_cont->nb_points; k++){
+        int* point;
+        cudaMalloc((void**) &point, 2*sizeof(int));
+        cudaMemcpy(point, h_cont->Points[k], 2*sizeof(int), cudaMemcpyHostToDevice);
+        l_points[k] = point;
     }
 
-    printf("test 4");
-    /* Copie des données sur GPU */
-    cudaMemcpy(cont_gpu,cont,sizeof(Context),cudaMemcpyHostToDevice);
-    cudaMemcpy(cont_gpu->Points, cont->Points, cont->nb_points*sizeof(int *),cudaMemcpyHostToDevice);
-    for (k=0; k< cont_gpu->nb_points; ++k)
-    {
-        cudaMemcpy(cont_gpu->Points[k], cont->Points[k], 2*sizeof(int) ,cudaMemcpyHostToDevice);
-    }
+    cudaMalloc((void**) &d_points, h_cont->nb_points*sizeof(int *));
+    cudaMemcpy(d_points, l_points, h_cont->nb_points*sizeof(int *), cudaMemcpyHostToDevice);
+    memcpy(l_cont, h_cont, sizeof(Context));
+    l_cont->Points = d_points;
 
-    printf("test 5");
+    cudaMalloc((void**) &d_cont, sizeof(Context));
+    cudaMemcpy(d_cont, l_cont, sizeof(Context), cudaMemcpyHostToDevice);
+    
 
-    return cont_gpu;
+    return d_cont;
 }
 
 

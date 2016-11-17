@@ -38,7 +38,6 @@ __host__ int gpu1(Context* cont){
 
 __global__ void kernel1(Context *cont){
     int index = threadIdx.x + blockIdx.x * blockDim.x;
-    
 }
 
 
@@ -49,6 +48,7 @@ int algo1(Context *cont, int env)
     switch (env){
         case CPU:
 		surface_max = cpu1(cont);
+		send_gpu(cont);
 		break;
         case GPU:
 		surface_max = gpu1(cont);
