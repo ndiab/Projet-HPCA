@@ -46,7 +46,7 @@ int main(int argc, char* argv[])
     //dim3 tailleGrille (,,1)
 
     /* 4 - Libération de la mémoire */
-    dealloc(cont);
+    h_free(cont);
 
     return 0;
 }

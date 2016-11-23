@@ -46,7 +46,7 @@ int load_file(Context* cont)
 	
 }
 
-__host__ Context* send_gpu(Context *h_cont){
+__host__ Context* d_load(Context *h_cont){
     /*
     Alloue la mémoire et copie les données du context CPU -> GPU.
     retourne le pointeur sur le contexte du device
@@ -76,8 +76,16 @@ __host__ Context* send_gpu(Context *h_cont){
     return d_cont;
 }
 
+__global__ void d_free(Context* d_cont){
+    int k;
+    for (k=0; k< d_cont->nb_points; ++k)
+       free(d_cont->Points[0]);
+    free(d_cont->Points);
+    free(d_cont);
+}
 
-void dealloc(Context* cont){
+
+void h_free(Context* cont){
     int k;
     for (k=0; k<cont->nb_points; ++k)
         free(cont->Points[k]);
