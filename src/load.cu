@@ -52,11 +52,16 @@ __host__ Context* d_load(Context *h_cont){
     retourne le pointeur sur le contexte du device
     */
 
+
+    printf("initialisation d_load : \n");
+
     Context *d_cont, *l_cont; //device copy of cont
     l_cont = (Context*)malloc(sizeof(Context));
     int **d_points, **l_points, k;
     l_points = (int**)malloc(h_cont->nb_points*sizeof(int *));
 
+   
+    printf("\t * initialisation et copie des Points\n");
     for(k = 0; k < h_cont->nb_points; k++){
         int* point;
         cudaMalloc((void**) &point, 2*sizeof(int));
@@ -64,11 +69,13 @@ __host__ Context* d_load(Context *h_cont){
         l_points[k] = point;
     }
 
+    printf("\t * initialisation et copie du tableau de points\n");
     cudaMalloc((void**) &d_points, h_cont->nb_points*sizeof(int *));
     cudaMemcpy(d_points, l_points, h_cont->nb_points*sizeof(int *), cudaMemcpyHostToDevice);
     memcpy(l_cont, h_cont, sizeof(Context));
     l_cont->Points = d_points;
 
+    printf("\t * initialisation et copie ddu contexte\n");
     cudaMalloc((void**) &d_cont, sizeof(Context));
     cudaMemcpy(d_cont, l_cont, sizeof(Context), cudaMemcpyHostToDevice);
     
