@@ -3,7 +3,6 @@ CXX2= nvcc -g -O3
 
 CPPFLAGS=-Iinc  --generate-code arch=compute_35,code=sm_35
 
-
 FILES=Rectangle_Maximal load algo1 algo2
 OBJECTS=$(addsuffix .o, $(FILES))
 BIN=bin/run
@@ -20,6 +19,6 @@ obj/%.o : src/%.cu
 #	$(CXX) -c -o $@ $^ $(CPPFLAGS) 
 
 exec : 
-	./bin/run Ressources/ex_N2000_alea 1 1
+	./bin/run Ressources/ex_N32768_alea 1 1
 clean :
 	rm -f bin/* obj/*

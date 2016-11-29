@@ -67,7 +67,7 @@ __global__ void kernel_1(Context* cont){
            surface_max = MAX(surface_max,y_min*(cont->Points[j][0] - cont->Points[pos][0]));
         } 
 	pos++;
-    }
+     }
 
   //  printf("Thread no %d finished \n", threadIdx.x);
 

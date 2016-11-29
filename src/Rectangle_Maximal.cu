@@ -1,12 +1,5 @@
 #include <Rectangle_Maximal.h>
 
-/*
-__global__ void kernel1(unsigned int *Points,unsigned int size)
-{
-unsigned int i = threadIdx.x
-unsigned int j = threaddy.y
-}
-*/
 
 double my_gettimeofday(){
   struct timeval tmp_time;
