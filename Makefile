@@ -1,7 +1,7 @@
 CXX=gcc -Wall -g -O3
 CXX2= nvcc -g -O3
 
-CPPFLAGS=-Iinc
+CPPFLAGS=-Iinc  --generate-code arch=compute_35,code=sm_35
 
 
 FILES=Rectangle_Maximal load algo1 algo2

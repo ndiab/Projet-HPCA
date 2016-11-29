@@ -28,9 +28,11 @@ int main(int argc, char* argv[])
 	return 1;
     }
     printf("   loaded !\n");
+
+    cont-> surface_max = 0;
 	
     /* 2 - Lancement de l'algorithme demandé pour résoudre le problème */ 
-    unsigned long long Surface_max = 0;
+    unsigned long long int Surface_max = 0;
     int env = atoi(argv[3]);
 
     switch (atoi(argv[2]))

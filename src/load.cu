@@ -75,7 +75,7 @@ __host__ Context* d_load(Context *h_cont){
     memcpy(l_cont, h_cont, sizeof(Context));
     l_cont->Points = d_points;
 
-    printf("\t * initialisation et copie ddu contexte\n");
+    printf("\t * initialisation et copie du contexte\n");
     cudaMalloc((void**) &d_cont, sizeof(Context));
     cudaMemcpy(d_cont, l_cont, sizeof(Context), cudaMemcpyHostToDevice);
     

@@ -18,7 +18,7 @@ typedef struct _Context
 	unsigned int nb_points;
 	unsigned int l;
 	unsigned int h;
-        unsigned long long surface_max;
+        unsigned long long int surface_max;
 	double start;  /* Compute time */
 	double end;
 }Context;
