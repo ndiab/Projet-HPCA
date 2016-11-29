@@ -1,7 +1,7 @@
 #include <algo2.h>
 
 
-int cpu2(Context *cont){
+unsigned long long int cpu2(Context *cont){
     int i,j;
     unsigned long long y_min, surface_max = 0; 
     for (i=0;i<cont->nb_points-1;++i)
@@ -18,8 +18,9 @@ int cpu2(Context *cont){
 
 __global__ void kernel_par_2(Context* cont){
     __shared__ int s_max[NB_THREADS];  // tableau contenant le surface_max de chaque thread
-    int nb_iter = cont->nb_points / NB_THREADS;
-    int pos = nb_iter * threadIdx.x + (MIN(cont->nb_points%NB_THREADS, threadIdx.x));
+    int index = threadIdx.x + blockIdx.x * blockDim.x ;
+    int nb_iter = 1; // cont->nb_points / NB_THREADS;
+    int pos = nb_iter * index + (MIN(cont->nb_points%NB_THREADS, index));
     if (cont->nb_points % NB_THREADS >= threadIdx.x) //Cas ou le nombre de points n'est pas un multiple de notre NB_THREADS
         nb_iter++;
     //CALCUL
@@ -59,11 +60,14 @@ __global__ void kernel_par_2(Context* cont){
         a = a >> 1;
     }
     __syncthreads();
-    cont->surface_max = s_max[0];
+    //cont->surface_max = s_max[0];
+
+    if(threadIdx.x == 0)
+        atomicMax(&(cont->surface_max), (unsigned long long int)s_max[0]);
 
 }
 
-__host__ int gpu2(Context* cont){
+__host__ unsigned long long int gpu2(Context* cont){
 
     unsigned long long surface_max = 0;
     Context * d_cont;
@@ -74,7 +78,7 @@ __host__ int gpu2(Context* cont){
 
     printf("lancement du kernel : \n");
     cont->start = my_gettimeofday();
-    kernel_par_2<<<1,NB_THREADS>>>(d_cont);
+    kernel_par_2<<<cont->nb_points/NB_THREADS,NB_THREADS>>>(d_cont);
     printf("sortie du kernel\n");
 
     cudaMemcpy(&surface_max, &(d_cont->surface_max), sizeof(unsigned long long), cudaMemcpyDeviceToHost); // récupération du résultat

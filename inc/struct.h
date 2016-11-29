@@ -9,6 +9,8 @@
 #define CPU 0
 #define GPU 1
 
+#define NB_THREADS 128
+
 extern double my_gettimeofday();
 
 typedef struct _Context
