@@ -31,7 +31,6 @@ int main(int argc, char* argv[])
     switch (atoi(argv[2]))
     {
 	case 1 :
-            printf("lancement de l'algo\n");
 	    Surface_max = algo1(cont, env);
 	    break;
 	case 2 :

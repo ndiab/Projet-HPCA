@@ -19,8 +19,6 @@ unsigned long long int h_algo1(Context *cont){
                   y_min = MIN(y_min, cont->Points[k][1]);
            }
            surface_max = MAX(surface_max,y_min*(cont->Points[j][0] - cont->Points[i][0]));
-          /* if(y_min*(cont->Points[j][0] - cont->Points[i][0]) == 54158500)
-		printf("pos = %d, j = %d ", i, j);*/
         }
 
     return surface_max;
@@ -36,49 +34,40 @@ __device__ void d_max(int* s_max){
 
 __global__ void kernel_1_dim1(Context* cont){
     __shared__ unsigned long long int s_max[NB_THREADS];  // tableau contenant le surface_max de chaque thread
-    int index = threadIdx.x + blockIdx.x * blockDim.x ;
-    int nb_iter = 1; //cont->nb_points / NB_THREADS;
-    int pos = nb_iter * index + (MIN(cont->nb_points%NB_THREADS, index));
-    if (cont->nb_points % NB_THREADS >= threadIdx.x) //Cas ou le nombre de points n'est pas un multiple de notre NB_THREADS
-        nb_iter++;
+    int i = threadIdx.x + blockIdx.x * blockDim.x ;
+
+
     //CALCUL
-    int i, j, y_min;
+    int j, y_min;
     unsigned long long int surface_max = 0;
-    int cpt = 0;
 
-  //  printf("Lancement du thread no %d\n", threadIdx.x);
-
-    for (i=0;i<nb_iter;++i){
-        for (j=pos+1;j<cont->nb_points;++j){
-           cpt++;
-           if (j==pos+1)
-              y_min = cont->h;
-           else if ( j-1 == pos+1) // 1 seul point separe xi et xj (i.e: xi < pt <xj)
-              y_min = cont->Points[pos+1][1];
-           else // au moins deux points separe xi et xj (i.e: xi< p1<p2 <xj)
-           { 
-              y_min = cont->Points[pos+1][1];
-	      int k;
-              for (k=pos+1;k<=j-1;++k)
-                  y_min = MIN(y_min, cont->Points[k][1]);
-           }
-           surface_max = MAX(surface_max,y_min*(cont->Points[j][0] - cont->Points[pos][0]));
-        } 
-	pos++;
-     }
-
-  //  printf("Thread no %d finished \n", threadIdx.x);
-
-  //  printf("thread no : %d surface_max = %llu, nb_iter = %d, pos = %d, nb_tour = %d\n",threadIdx.x, surface_max, nb_iter, pos, cpt);
-    // stockage des resultats dans la mémoire partagée
-    s_max[threadIdx.x] = surface_max;
+    if(i >= cont-> nb_points)
+	s_max[threadIdx.x] = 0;
+    else{
+	    for (j=i+1;j<cont->nb_points;++j){
+	       if (j==i+1)
+		  y_min = cont->h;
+	       else if ( j-1 == i+1) // 1 seul point separe xi et xj (i.e: xi < pt <xj)
+		  y_min = cont->Points[i+1][1];
+	       else // au moins deux points separe xi et xj (i.e: xi< p1<p2 <xj)
+	       { 
+		  y_min = cont->Points[i+1][1];
+		  int k;
+		  for (k=i+1;k<=j-1;++k)
+		      y_min = MIN(y_min, cont->Points[k][1]);
+	       }
+	       surface_max = MAX(surface_max,y_min*(cont->Points[j][0] - cont->Points[i][0]));
+	    }
+  
+	    // stockage des resultats dans la mémoire partagée
+	    s_max[threadIdx.x] = surface_max;
+    }
     __syncthreads();
 
     /* Comparaison des resultats afin de retrouver la valeur maximale */
-    int a = NB_THREADS/2;
+    int a = NB_THREADS>>1;
     while(a>0 && a>threadIdx.x){
         unsigned long long int i = MAX(s_max[2*threadIdx.x], s_max[2*threadIdx.x+1]);
-      //  printf("valeur de i = %d\n",i);
         __syncthreads();
         s_max[threadIdx.x] = i;
         __syncthreads();
@@ -117,7 +106,7 @@ __global__ void kernel_1_dim2(Context* cont){
 	       for (k=i+1;k<=j-1;++k)
 		  y_min = MIN(y_min, cont->Points[k][1]);
 	     }
-	    if(j>i) s_max[pos_shared_tab] =  y_min*(cont->Points[j][0] - cont->Points[i][0]);
+	    s_max[pos_shared_tab] =  y_min*(cont->Points[j][0] - cont->Points[i][0]);
     }
     __syncthreads();
 
@@ -133,7 +122,7 @@ __global__ void kernel_1_dim2(Context* cont){
 
     __syncthreads();
 
-    if(pos_shared_tab == 0)
+   if(threadIdx.x == 0 && threadIdx.y == 0  && s_max[0] != 0)
         atomicMax(&(cont->surface_max), (unsigned long long int)s_max[0]);
 
 }
@@ -156,10 +145,11 @@ __host__ unsigned long long int d_algo1(Context* cont){
     kernel_1_dim2<<<nbBlocks, threadsPerBlock>>>(d_cont);
     
 
-   /* printf("lancement du kernel : \n");
+    /*printf("lancement du kernel : \n");
     cont->start = my_gettimeofday();
-    kernel_1_dim1<<<cont->nb_points/NB_THREADS,NB_THREADS>>>(d_cont);  
-    printf("sortie du kernel\n");*/
+    dim3 threadsPerBlock(NB_THREADS);
+    dim3 nbBlocks(cont->nb_points/threadsPerBlock.x + 1);
+    kernel_1_dim1<<<nbBlocks, threadsPerBlock>>>(d_cont);*/
 
 
     cudaMemcpy(&surface_max, &(d_cont->surface_max), sizeof(unsigned long long int), cudaMemcpyDeviceToHost); // récupération du résultat
