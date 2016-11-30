@@ -9,7 +9,7 @@
 #define CPU 0
 #define GPU 1
 
-#define NB_THREADS 128
+#define NB_THREADS 64
 
 extern double my_gettimeofday();
 
