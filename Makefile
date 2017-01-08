@@ -3,7 +3,7 @@ CXX2= nvcc -g -O3
 
 CPPFLAGS=-Iinc  --generate-code arch=compute_35,code=sm_35
 
-FILES=Rectangle_Maximal load algo1 algo2
+FILES=Rectangle_Maximal load algo1 algo2 dvpr
 OBJECTS=$(addsuffix .o, $(FILES))
 BIN=bin/run
 

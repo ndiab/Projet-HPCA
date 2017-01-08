@@ -1,4 +1,4 @@
-#include <DVPR.h>
+#include <dvpr.h>
 
 unsigned long long int dvpr_seq(int debut, int fin, Context* cont){
 	/**
@@ -35,7 +35,7 @@ unsigned long long int dvpr_seq(int debut, int fin, Context* cont){
 	}
 
 	a = dvpr_seq(debut, m, cont);
-	b = dvpr(m, fin, cont);
+	b = dvpr_seq(m, fin, cont);
 	c = y_min * (cont->Points[fin][0] - cont->Points[debut][0]);
 
 	unsigned long long int sous_max = MAX(a,b);
@@ -44,12 +44,12 @@ unsigned long long int dvpr_seq(int debut, int fin, Context* cont){
 }
 
 
-unsigned long long int (Context* cont, int env){
+unsigned long long int dvpr(Context* cont, int env){
 	int surface_max = 0;
 
 	switch (env){
 		case CPU :
-			dvpr_seq(0, cont->n-1, cont);
+			dvpr_seq(0, cont->nb_points-1, cont);
 	}
 
 	return surface_max;
