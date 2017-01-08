@@ -36,15 +36,13 @@ int main(int argc, char* argv[])
 	case 2 :
 	    Surface_max = algo2(cont, env);
 	    break;
+	case 3 :
+	    Surface_max = dvpr(cont, env);
     }
 
 
     /* 3 - Affichage du resultat */
     printf("Surface maximale = %llu\n", Surface_max);
-    
-    // deploiement sur GPU
-    //dim3 threabParBlock(,,1)
-    //dim3 tailleGrille (,,1)
 
     /* 4 - Libération de la mémoire */
     printf("Temps total de calcul : %g sec\n", cont->end - cont->start);
