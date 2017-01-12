@@ -25,5 +25,7 @@ typedef struct _Context
 	double end;
 }Context;
 
+extern bool overflow;
+
 
 #endif /* struct.h */

@@ -1,5 +1,6 @@
 #include <Rectangle_Maximal.h>
 
+bool overflow = false;
 
 double my_gettimeofday(){
   struct timeval tmp_time;
@@ -47,6 +48,12 @@ int main(int argc, char* argv[])
     /* 4 - Libération de la mémoire */
     printf("Temps total de calcul : %g sec\n", cont->end - cont->start);
     h_free(cont);
+
+    if(overflow){
+	printf(
+		"********** WARNING **********\nLA RECURSION EST BEAUCOUP TROP IMPORTANTE POUR LE SYSTEME\nPOUR EVITER UN DEBORDEMENT DE LA PILE LA RECURSION A ETE INTERROMPUE\nLE RESULTAT PEUT ETRE INCORECT\n"
+	);
+    }
 
     return 0;
 }

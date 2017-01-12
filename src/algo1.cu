@@ -19,6 +19,7 @@ unsigned long long int h_algo1(Context *cont){
                   y_min = MIN(y_min, cont->Points[k][1]);
            }
            surface_max = MAX(surface_max,y_min*(cont->Points[j][0] - cont->Points[i][0]));
+	   if(y_min*(cont->Points[j][0] - cont->Points[i][0]) == 6741) printf("coordonnees : i = %d, j = %d\n", i, j);
         }
 
     return surface_max;

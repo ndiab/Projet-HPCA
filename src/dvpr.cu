@@ -1,31 +1,20 @@
 #include <dvpr.h>
 
-unsigned long long int dvpr_seq(int debut, int fin, Context* cont){
+unsigned long long int dvpr_seq(int debut, int fin, Context* cont, int deep){
 	/**
 	*	Algorithme Diviser pour regner sur CPU
 	**/
-	int i, m, y_min = cont->Points[debut][1], b_debut = debut, b_fin = fin;
+	int i, m, y_min, b_debut = debut, b_fin = fin;
 	unsigned long long int a, b, c;
 
-	while(cont->Points[debut][0] == cont->Points[b_debut][0]){
-		if (b_debut == b_fin)
-			break;
-		else
-			b_debut++;
-	}
-	while(cont->Points[fin][0] == cont->Points[b_fin][0]){
-		if (b_debut == b_fin)
-			break;
-		else
-			b_fin--;
-	}
-			
 
 	/* Condition d'arret */
-	if(b_debut == b_fin){
+	if(b_fin - b_debut <2){
 		return (cont->Points[b_debut][1]);
 	}
 
+	y_min = cont->Points[b_debut+1][1];
+	m = b_debut+1;
 
 	for(i = b_debut+1; i < b_fin; i++){
 		if (cont->Points[i][1] < y_min){
@@ -34,22 +23,32 @@ unsigned long long int dvpr_seq(int debut, int fin, Context* cont){
 		}
 	}
 
-	a = dvpr_seq(debut, m, cont);
-	b = dvpr_seq(m, fin, cont);
+	deep++;
+	
+	/* Condition pour ne pas faire de stack overflow */
+	if(deep > 101000){
+		overflow = true ;
+		printf("deep = %d\n",deep);
+		return 0;  
+	}
+
+	a = dvpr_seq(debut, m, cont, deep);
+	b = dvpr_seq(m, fin, cont, deep);
 	c = y_min * (cont->Points[fin][0] - cont->Points[debut][0]);
 
 	unsigned long long int sous_max = MAX(a,b);
+	unsigned long long int _max = MAX(sous_max, c);
 	
-	return MAX(sous_max, c);
+	return _max;
 }
 
 
 unsigned long long int dvpr(Context* cont, int env){
-	int surface_max = 0;
+	unsigned long long int surface_max = 0;
 
 	switch (env){
 		case CPU :
-			dvpr_seq(0, cont->nb_points-1, cont);
+			surface_max = dvpr_seq(0, cont->nb_points-1, cont, 0);
 	}
 
 	return surface_max;
