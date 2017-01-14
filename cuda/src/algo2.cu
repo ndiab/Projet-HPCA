@@ -1,21 +1,5 @@
 #include <algo2.h>
 
-
-unsigned long long int cpu2(Context *cont){
-    int i,j;
-    unsigned long long y_min, surface_max = 0; 
-    for (i=0;i<cont->nb_points-1;++i)
-        for (j=i+1;j<cont->nb_points;++j)
-        {
-           if (j==i+1)
-              y_min = cont->h;
-           else
-              y_min = MIN(y_min, cont->Points[j-1][1]);
-           surface_max = MAX(surface_max,y_min*(cont->Points[j][0] - cont->Points[i][0]));
-         }  
-    return surface_max;
-}
-
 __global__ void kernel_par_2(Context* cont){
     __shared__ int s_max[NB_THREADS];  // tableau contenant le surface_max de chaque thread
     int i = threadIdx.x + blockIdx.x * blockDim.x ;
@@ -80,17 +64,8 @@ int algo2(Context *cont, int env)
 {
     int surface_max = 0;
 
-    switch (env){
-        case CPU:
-                cont->start = my_gettimeofday();
-		surface_max = cpu2(cont);
-                cont->end = my_gettimeofday();
-		break;
-        case GPU:
-		printf("lancement du GPU\n");
-                surface_max = gpu2(cont);
-                break;
-    }
-  
+    printf("lancement du GPU\n");
+    surface_max = gpu2(cont);
+    
     return surface_max;
 }

@@ -28,7 +28,7 @@ unsigned long long int dvpr_seq(int debut, int fin, Context* cont, int deep){
 	/* Condition pour ne pas faire de stack overflow */
 	if(deep > 101000){
 		overflow = true ;
-		printf("deep = %d\n",deep);
+		//printf("deep = %d\n",deep);
 		return 0;  
 	}
 

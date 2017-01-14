@@ -1,30 +1,5 @@
 #include <algo1.h>
 
-unsigned long long int h_algo1(Context *cont){
-
-    int i,j;
-    unsigned long long int y_min, surface_max = 0;
-    for (i=0;i<cont->nb_points-1;++i)
-        for (j=i+1;j<cont->nb_points;++j)
-        {
-           if (j==i+1)
-              y_min = cont->h;
-           else if ( j-1 == i+1) // 1 seul point separe xi et xj (i.e: xi < pt <xj)
-              y_min = cont->Points[i+1][1];
-           else // au moins deux points separe xi et xj (i.e: xi< p1<p2 <xj)
-           { 
-              y_min = cont->Points[i+1][1];
-	      int k;
-              for (k=i+1;k<=j-1;++k)
-                  y_min = MIN(y_min, cont->Points[k][1]);
-           }
-           surface_max = MAX(surface_max,y_min*(cont->Points[j][0] - cont->Points[i][0]));
-	   if(y_min*(cont->Points[j][0] - cont->Points[i][0]) == 6741) printf("coordonnees : i = %d, j = %d\n", i, j);
-        }
-
-    return surface_max;
-
-}
 
 __device__ void d_max(int* s_max){
     int i = MAX(s_max[2*threadIdx.x], s_max[2*threadIdx.x+1]);
@@ -144,13 +119,6 @@ __host__ unsigned long long int d_algo1(Context* cont){
     printf("lancement du kernel ... \n");
     cont->start = my_gettimeofday();
     kernel_1_dim2<<<nbBlocks, threadsPerBlock>>>(d_cont);
-    
-
-    /*printf("lancement du kernel : \n");
-    cont->start = my_gettimeofday();
-    dim3 threadsPerBlock(NB_THREADS);
-    dim3 nbBlocks(cont->nb_points/threadsPerBlock.x + 1);
-    kernel_1_dim1<<<nbBlocks, threadsPerBlock>>>(d_cont);*/
 
 
     cudaMemcpy(&surface_max, &(d_cont->surface_max), sizeof(unsigned long long int), cudaMemcpyDeviceToHost); // récupération du résultat
@@ -169,17 +137,8 @@ unsigned long long int algo1(Context *cont, int env)
 {  
     int surface_max = 0;
 
-    switch (env){
-        case CPU:
-		cont->start = my_gettimeofday(); 
-		surface_max = h_algo1(cont);
-		cont->end = my_gettimeofday();
-		break;
-        case GPU:
-                printf("lancement du GPU\n");
-		surface_max = d_algo1(cont);
-		break;
-    }
-  
+    printf("lancement du GPU\n");
+    surface_max = d_algo1(cont);
+
     return surface_max;
 }

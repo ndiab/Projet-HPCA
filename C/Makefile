@@ -1,0 +1,23 @@
+CXX=gcc -Wall -g -O3
+
+
+CPPFLAGS=-Iinc -fopenmp
+
+FILES=Rectangle_Maximal load algo1 algo2 dvpr
+OBJECTS=$(addsuffix .o, $(FILES))
+BIN=bin/run
+
+all : $(BIN)
+
+$(BIN) : $(addprefix obj/, $(OBJECTS))
+	$(CXX) -o $@ $^
+
+obj/%.o : src/%.c
+	$(CXX) -c -o $@ $^ $(CPPFLAGS) 
+
+run :
+	./bin/run ../Ressources/ex_N10000_alea 1
+
+
+clean :
+	rm -f bin/* obj/*
