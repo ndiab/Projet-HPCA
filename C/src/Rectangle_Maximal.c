@@ -27,8 +27,6 @@ int main(int argc, char* argv[])
 	
     /* 2 - Lancement de l'algorithme demandé pour résoudre le problème */ 
     unsigned long long int Surface_max = 0;
-
-    printf("lancement de l'algo");
     
     switch (atoi(argv[2]))
     {
@@ -39,7 +37,9 @@ int main(int argc, char* argv[])
 	    Surface_max = algo2(cont);
 	    break;
 	case 3 :
+	    cont->start = my_gettimeofday(); 
 	    Surface_max = dvpr(0, cont->nb_points-1, cont, 0);
+	    cont->end = my_gettimeofday();
     }
 
 

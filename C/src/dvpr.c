@@ -1,4 +1,5 @@
 #include <dvpr.h>
+#include <omp.h>
 
 
 unsigned long long int dvpr(int debut, int fin, Context* cont, int deep){
@@ -33,12 +34,21 @@ unsigned long long int dvpr(int debut, int fin, Context* cont, int deep){
 		return 0;  
 	}
 
+	unsigned long long int sous_max, _max;
+	
+	#pragma omp parallel
+	{
+	#pragma omp task shared(a)
 	a = dvpr(debut, m, cont, deep);
+	#pragma omp task shared(b)
 	b = dvpr(m, fin, cont, deep);
+
 	c = y_min * (cont->Points[fin][0] - cont->Points[debut][0]);
 
-	unsigned long long int sous_max = MAX(a,b);
-	unsigned long long int _max = MAX(sous_max, c);
-	
+	#pragma omp taskwait
+	sous_max = MAX(a,b);
+	_max = MAX(sous_max, c);
+	}
+
 	return _max;
 }

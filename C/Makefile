@@ -16,7 +16,7 @@ obj/%.o : src/%.c
 	$(CXX) -c -o $@ $^ $(CPPFLAGS) 
 
 run :
-	./bin/run ../Ressources/ex_N200000_res75141975 2
+	./bin/run ../Ressources/ex_N100000_res100000 3
 
 
 clean :
