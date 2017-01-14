@@ -15,7 +15,7 @@ obj/%.o : src/%.cu
 	$(CXX) -c -o $@ $^ $(CPPFLAGS) 
 
 run :
-	./bin/run ../Ressources/ex_N500_res7854 1 0
+	./bin/run ../Ressources/ex_N10000_alea 1 0
 
 clean :
 	rm -f bin/* obj/*

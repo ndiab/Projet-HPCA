@@ -1,4 +1,4 @@
-CXX=gcc -Wall -g -O3
+CXX=gcc -Wall -g -O3 -fopenmp
 
 
 CPPFLAGS=-Iinc -fopenmp
@@ -16,7 +16,7 @@ obj/%.o : src/%.c
 	$(CXX) -c -o $@ $^ $(CPPFLAGS) 
 
 run :
-	./bin/run ../Ressources/ex_N10000_alea 1
+	./bin/run ../Ressources/ex_N200000_res75141975 2
 
 
 clean :
