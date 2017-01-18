@@ -43,13 +43,10 @@ unsigned long long int dvpr_seq(int debut, int fin, Context* cont, int deep){
 }
 
 
-unsigned long long int dvpr(Context* cont, int env){
+unsigned long long int dvpr(Context* cont){
 	unsigned long long int surface_max = 0;
 
-	switch (env){
-		case CPU :
-			surface_max = dvpr_seq(0, cont->nb_points-1, cont, 0);
-	}
+	surface_max = dvpr_seq(0, cont->nb_points-1, cont, 0);
 
 	return surface_max;
 }

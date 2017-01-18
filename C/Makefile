@@ -1,4 +1,4 @@
-CXX=gcc -Wall -g -O3 -fopenmp
+CXX=gcc -Wall -g -O3 -fopenmp 
 
 
 CPPFLAGS=-Iinc -fopenmp

@@ -14,8 +14,8 @@ __global__ void kernel_1_dim1(Context* cont){
 
 
     //CALCUL
-    int j, y_min;
-    unsigned long long int surface_max = 0;
+    int j;
+    unsigned long long int surface_max = 0, y_min;
 
     if(i >= cont-> nb_points)
 	s_max[threadIdx.x] = 0;
@@ -64,7 +64,7 @@ __global__ void kernel_1_dim2(Context* cont){
     int j = threadIdx.y + blockIdx.y * blockDim.y;
 
     //CALCUL
-    int y_min;
+    unsigned long long int y_min;
     int pos_shared_tab = threadIdx.x * blockDim.x + threadIdx.y;
 
     if (j <= i || j>= cont-> nb_points || i >= cont->nb_points){
@@ -133,9 +133,9 @@ __host__ unsigned long long int d_algo1(Context* cont){
 
 
 
-unsigned long long int algo1(Context *cont, int env)
+unsigned long long int algo1(Context *cont)
 {  
-    int surface_max = 0;
+    unsigned long long int surface_max = 0;
 
     printf("lancement du GPU\n");
     surface_max = d_algo1(cont);

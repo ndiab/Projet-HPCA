@@ -6,8 +6,8 @@ unsigned long long int dvpr(int debut, int fin, Context* cont, int deep){
 	/**
 	*	Algorithme Diviser pour regner sur CPU
 	**/
-	int i, m, y_min, b_debut = debut, b_fin = fin;
-	unsigned long long int a, b, c;
+	int i, m, b_debut = debut, b_fin = fin;
+	unsigned long long int a, b, c, y_min;
 
 
 	/* Condition d'arret */
@@ -24,7 +24,7 @@ unsigned long long int dvpr(int debut, int fin, Context* cont, int deep){
 			m = i;
 		}
 	}
-
+	
 	deep++;
 	
 	/* Condition pour ne pas faire de stack overflow */
@@ -36,8 +36,6 @@ unsigned long long int dvpr(int debut, int fin, Context* cont, int deep){
 
 	unsigned long long int sous_max, _max;
 	
-	#pragma omp parallel
-	{
 	#pragma omp task shared(a)
 	a = dvpr(debut, m, cont, deep);
 	#pragma omp task shared(b)
@@ -45,10 +43,9 @@ unsigned long long int dvpr(int debut, int fin, Context* cont, int deep){
 
 	c = y_min * (cont->Points[fin][0] - cont->Points[debut][0]);
 
-	#pragma omp taskwait
+	//#pragma omp taskwait
 	sous_max = MAX(a,b);
 	_max = MAX(sous_max, c);
-	}
 
 	return _max;
 }

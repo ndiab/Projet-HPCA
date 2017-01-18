@@ -27,18 +27,17 @@ int main(int argc, char* argv[])
 	
     /* 2 - Lancement de l'algorithme demandé pour résoudre le problème */ 
     unsigned long long int Surface_max = 0;
-    int env = atoi(argv[3]);
     
     switch (atoi(argv[2]))
     {
 	case 1 :
-	    Surface_max = algo1(cont, env);
+	    Surface_max = algo1(cont);
 	    break;
 	case 2 :
-	    Surface_max = algo2(cont, env);
+	    Surface_max = algo2(cont);
 	    break;
 	case 3 :
-	    Surface_max = dvpr(cont, env);
+	    Surface_max = dvpr(cont);
     }
 
 

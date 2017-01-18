@@ -3,4 +3,4 @@
 #include <omp.h>
 
 
-unsigned long long int algo1(Context *cont, int env);
+unsigned long long int algo1(Context *cont);
