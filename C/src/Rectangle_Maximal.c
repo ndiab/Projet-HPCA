@@ -38,7 +38,11 @@ int main(int argc, char* argv[])
 	    break;
 	case 3 :
 	    cont->start = my_gettimeofday(); 
+	    #pragma omp parallel
+	    {
+	    #pragma omp single
 	    Surface_max = dvpr(0, cont->nb_points-1, cont, 0);
+	    }
 	    cont->end = my_gettimeofday();
     }
 
