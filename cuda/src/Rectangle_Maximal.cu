@@ -36,8 +36,6 @@ int main(int argc, char* argv[])
 	case 2 :
 	    Surface_max = algo2(cont);
 	    break;
-	case 3 :
-	    Surface_max = dvpr(cont);
     }
 
 

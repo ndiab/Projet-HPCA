@@ -26,11 +26,13 @@ __global__ void kernel_par_2(Context* cont){
     s_max[threadIdx.x] = surface_max;
     __syncthreads();
 
+    unsigned long long int s;
+ 
     /* Comparaison des resultats afin de retrouver la valeur maximale */
     int a = NB_THREADS >>1 ;
     while(a>0 && a>threadIdx.x){
-        unsigned long long int i = MAX(s_max[2*threadIdx.x], s_max[2*threadIdx.x+1]);
-        s_max[threadIdx.x] = i;
+        s = MAX(s_max[2*threadIdx.x], s_max[2*threadIdx.x+1]);
+        s_max[threadIdx.x] = s;
 	__syncthreads();
         a = a >> 1;
     }

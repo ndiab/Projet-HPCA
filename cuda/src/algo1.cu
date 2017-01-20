@@ -40,16 +40,14 @@ __global__ void kernel_1_dim1(Context* cont){
     }
     __syncthreads();
 
-    /* Comparaison des resultats afin de retrouver la valeur maximale */
-    int a = NB_THREADS>>1;
+   /* Comparaison des resultats afin de retrouver la valeur maximale */
+    int a = NB_THREADS >>1 ;
     while(a>0 && a>threadIdx.x){
         unsigned long long int i = MAX(s_max[2*threadIdx.x], s_max[2*threadIdx.x+1]);
-        __syncthreads();
         s_max[threadIdx.x] = i;
-        __syncthreads();
+	__syncthreads();
         a = a >> 1;
     }
-    __syncthreads();
 
     if(threadIdx.x == 0)
         atomicMax(&(cont->surface_max), (unsigned long long int)s_max[0]);

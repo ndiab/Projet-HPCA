@@ -17,11 +17,11 @@ int main(int argc, char* argv[])
     cont->file_name = argv[1];
     
     printf("loading...");
-    if (load_file(cont)){
+    if (load_file(cont) && atoi(argv[2])!=4){ // 4 représente la fonction lancée avec MPI qui a son propre chargement de fichier
 	printf("Problème de chargement du fichier");
 	return 1;
     }
-    printf("   loaded !\n");
+    printf("loaded !\n");
 
     cont-> surface_max = 0;
 	
@@ -44,6 +44,9 @@ int main(int argc, char* argv[])
 	    Surface_max = dvpr(0, cont->nb_points-1, cont, 0);
 	    }
 	    cont->end = my_gettimeofday();
+	    break;
+	case 4 :
+	    Surface_max = dvpr_mpi(cont);
     }
 
 
