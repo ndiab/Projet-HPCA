@@ -15,7 +15,8 @@ obj/%.o : src/%.cu
 	$(CXX) -c -o $@ $^ $(CPPFLAGS) 	
 
 run :
-	./bin/run ../Ressources/ex_N10000_alea 1 0
+	./bin/run /users/Enseignants/fortin/Public/HPCA_oct2016/Projet/JeuxDeDonnees/Perf/ex_N131072_alea 2
+	./bin/run /users/Enseignants/fortin/Public/HPCA_oct2016/Projet/JeuxDeDonnees/Verif/ex_N500_res7854 1
 
 clean :
 	rm -f bin/* obj/*

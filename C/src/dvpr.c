@@ -55,14 +55,13 @@ unsigned long long int dvpr(int debut, int fin, Context* cont, int deep){
 }
 
 unsigned long long int dvpr_mpi(Context* cont){
-	int my_rank, m, i;
+	int my_rank, m = 0, i, provided;
 	MPI_Status status;
-	unsigned long long int y_min, a, b, c, sous_max, _max;
+	unsigned long long int y_min = cont->h, a = 0, b = 0, c, sous_max, _max;
 	MPI_Request req;
-	
-	
 
-	MPI_Init(NULL,NULL);
+	//MPI_Init(NULL,NULL);
+	MPI_Init_thread( 0, 0, MPI_THREAD_SERIALIZED, &provided );
 	MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
 	
 	/* 1 -- Chargement du fichier (chaque processus charge son fichier) */
@@ -83,10 +82,18 @@ unsigned long long int dvpr_mpi(Context* cont){
 	
 	/* 3 - Lancement de l'algorithme recursif en parallele */
 	if(my_rank == 0){
+		#pragma omp parallel
+		{
+		#pragma omp single
 		a = dvpr(0, m, cont, 1);
+		}
 		MPI_Recv(&b, 1, MPI_UNSIGNED_LONG_LONG, 1, 0, MPI_COMM_WORLD, &status);
 	}else{
+		#pragma omp parallel
+		{
+		#pragma omp single
 		a = dvpr(m, cont->nb_points-1, cont, 1);
+		}
 		MPI_Isend(&a, 1, MPI_UNSIGNED_LONG_LONG, 0, 0, MPI_COMM_WORLD, &req);
 	}
 
@@ -99,6 +106,13 @@ unsigned long long int dvpr_mpi(Context* cont){
 	sous_max = MAX(a,b);
 	_max = MAX(sous_max, c);
 	cont->end = my_gettimeofday();
+
+	if(my_rank == 0){
+        printf("Surface maximale = %llu\n", _max);
+
+    
+        printf("Temps total de calcul : %g sec\n", cont->end - cont->start);
+    }
 
 	return _max;
 }

@@ -7,7 +7,7 @@ unsigned long long int algo2(Context *cont){
 
     int i,j;
     unsigned long long y_min = cont->h , surface_max = 0;
-    #pragma omp parallel for private(j) firstprivate(y_min) reduction(max:surface_max)
+   // #pragma omp parallel for private(j) firstprivate(y_min) reduction(max:surface_max)
     for (i=0;i<cont->nb_points-1;++i)
         for (j=i+1;j<cont->nb_points;++j)
         {

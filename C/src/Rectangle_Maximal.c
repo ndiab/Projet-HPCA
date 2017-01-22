@@ -1,4 +1,6 @@
 #include <Rectangle_Maximal.h>
+#include <omp.h>
+#include <mpi.h>
 
 bool overflow = FALSE;
 
@@ -51,10 +53,13 @@ int main(int argc, char* argv[])
 
 
     /* 3 - Affichage du resultat */
-    printf("Surface maximale = %llu\n", Surface_max);
+    if(atoi(argv[2]) != 4){  //MPI : affichage different
+        printf("Surface maximale = %llu\n", Surface_max);
 
+    
+        printf("Temps total de calcul : %g sec\n", cont->end - cont->start);
+    }
     /* 4 - Libération de la mémoire */
-    printf("Temps total de calcul : %g sec\n", cont->end - cont->start);
     h_free(cont);
 
     if(overflow){
